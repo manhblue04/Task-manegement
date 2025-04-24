@@ -6,6 +6,11 @@ const searchHelper = require("../../../helpers/search");
 //[GET] api/v1/tasks/
 module.exports.index = async (req, res) => {
   const find = {
+    $or:[
+      { createdBy: req.user.id },
+      { listUser: req.user.if }
+    ],
+
     deleted: false
   };
 
@@ -144,6 +149,7 @@ module.exports.changeMulti = async (req, res) => {
 //[POST] api/v1/tasks/create
 module.exports.create = async (req, res) => {
   try {
+    req.body.createdBy = req.user.id;
     const task = new Task(req.body);
     const data = await task.save();
 

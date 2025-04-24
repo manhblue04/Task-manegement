@@ -24,7 +24,8 @@ module.exports.register = async (req, res) => {
         const user = new User({
             fullName: req.body.fullName,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            token: generateHelper.generateRandomString(30)
         });
 
         user.save();
@@ -187,3 +188,26 @@ module.exports.resetPassword = async (req, res) => {
     });
 }
 
+//[GET] /api/v1/user/detail
+module.exports.detail = async (req, res) => {
+    // const token = req.cookies.token;
+
+    res.json({
+        code: 200,
+        message: "Thành công!",
+        info: req.user
+    });
+}
+
+// [GET] /api/v1/user/list
+module.exports.list = async (req, res) => {
+    const users = await User.find({
+        deleted: false
+    }).select("id fullName email");
+
+    res.json({
+        code: 200,
+        message: "Thành công!",
+        users: users
+    });
+}
